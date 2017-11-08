@@ -4,28 +4,35 @@ Point = point.Point
 Board = board.Board
 
 class Game:
-    def __init__(self, colors):
-        self.colors = colors
+    def __init__(self):
         self.board = Board(4, 4)
+        self.colors = {"bg": [60, 60, 60],
+                  "btn": [255, 255, 255],
+                  "btn_empty": [160, 160, 160],
+                  "text": [0, 0, 0]}
         pass
 
     def shuffle(self):
         self.board.shuffle()
 
     def getMenuBounds(self, screen):
-        
+        rect = screen.get_rect()
+        width = min(rect.width / 3, 200)
+        height = rect.height
+        return pygame.Rect(0, 0, int(width), height)
 
     def getBoardBounds(self, screen):
+        rect_menu = self.getMenuBounds(screen)
         rect = screen.get_rect()
-        w = rect.width
+        w = rect.width - rect_menu.width
         h = rect.height
         dim = min(w, h)
-        rect = pygame.Rect((w - dim) / 2, (h - dim) / 2, dim, dim)
+        rect = pygame.Rect(rect_menu.width + (w - dim) / 2, (h - dim) / 2, dim, dim)
         return rect
     
     def draw(self, screen):
-        rect = self.getBoardBounds(screen)
-        self.drawBoard(screen, rect)
+        self.drawBoard(screen, self.getBoardBounds(screen))
+        self.drawMenu(screen, self.getMenuBounds(screen))
 
     def drawBoard(self, screen, rect):
         screen.fill(self.colors["bg"], rect)
@@ -46,7 +53,9 @@ class Game:
             else:
                 screen.fill(self.colors["btn"], rect2)
             screen.blit(font.render(str(board.getAt(p)), True, self.colors["text"]), rect2)
-            
+
+    def drawMenu(self, screen, rect):
+        screen.fill([255, 0, 0], rect)
         
     def getBoardPoint(self, screen, pt):
         rect = self.getBoardBounds(screen)
