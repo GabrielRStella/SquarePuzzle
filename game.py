@@ -1,16 +1,17 @@
-import board, point, pygame
+import board, gui, point, pygame
 
 Point = point.Point
 Board = board.Board
 
 class Game:
-    def __init__(self):
+    def __init__(self, screen):
         self.board = Board(4, 4)
         self.colors = {"bg": [60, 60, 60],
                   "btn": [255, 255, 255],
                   "btn_empty": [160, 160, 160],
                   "text": [0, 0, 0]}
-        pass
+        #add menu
+        self.gui = gui.Gui(self.getMenuBounds(screen))
 
     def shuffle(self):
         self.board.shuffle()
@@ -56,6 +57,7 @@ class Game:
 
     def drawMenu(self, screen, rect):
         screen.fill([255, 0, 0], rect)
+        self.gui.draw(screen)
         
     def getBoardPoint(self, screen, pt):
         rect = self.getBoardBounds(screen)
@@ -77,7 +79,7 @@ class Game:
             p2 = board.findEmpty()
             if(p in p2.adj()):
                 board.swap(p, p2)
-        pass
+        self.gui.onClick(screen, event.pos)
 
     def mouseButtonUp(self, screen, event):
         #p = Point(event.pos[0], event.pos[1])

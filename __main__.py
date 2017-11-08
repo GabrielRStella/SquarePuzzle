@@ -6,7 +6,7 @@ bg = 255, 255, 255
 
 screen = pygame.display.set_mode(size, pygame.RESIZABLE)
 
-game = game.Game()
+game = game.Game(screen)
 game.shuffle()
 
 #TODO:
