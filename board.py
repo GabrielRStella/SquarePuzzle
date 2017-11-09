@@ -12,12 +12,26 @@ class Board:
         self.board = list(range(w * h))
         #list(map(lambda x: list(range(x * h, (x + 1) * h)), [y for y in range(w)]))
 
-    def shuffle(self):
+    def shuffle(self, error):
         board = self.board
         r = Random()
+        p = self.findEmpty()
+        while self.getError() < error:
+            print(self.adj(p))
+            p2 = random.choice(self.adj(p))
+            print(p)
+            print(p2)
+            self.swap(p, p2)
+            p = p2
+
+    def getError(self):
+        board = self.board
+        error = 0
         for i in range(self.size):
-            j = r.randint(0, self.size - 1)
-            self.swap(self.pointOf(i), self.pointOf(j))
+            j = board[i]
+            dist = abs(i - j)
+            error = error + dist
+        return error
 
     def findEmpty(self):
         x = 0

@@ -14,7 +14,7 @@ class Game:
         self.gui = gui.Gui(self.getMenuBounds(screen))
 
     def shuffle(self):
-        self.board.shuffle()
+        self.board.shuffle(50)
 
     def getMenuBounds(self, screen):
         rect = screen.get_rect()
