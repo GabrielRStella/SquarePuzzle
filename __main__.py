@@ -2,7 +2,7 @@ import sys, pygame, game
 pygame.init()
 
 size = width, height = 800, 600
-bg = 255, 255, 255
+bg = 0, 0, 0
 
 screen = pygame.display.set_mode(size, pygame.RESIZABLE)
 
