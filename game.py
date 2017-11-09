@@ -6,7 +6,7 @@ Board = board.Board
 class Game:
     def __init__(self, screen):
         self.board = Board(4, 4)
-        self.colors = {"bg": [60, 60, 60],
+        self.colors = {"bg": [0, 0, 0],
                   "btn": [255, 255, 255],
                   "btn_empty": [160, 160, 160],
                   "text": [0, 0, 0]}
@@ -47,7 +47,7 @@ class Game:
             y = p.y
             rect2 = pygame.Rect(sizex * x, sizey * y, sizex, sizey)
             rect2.move_ip(rect.x, rect.y)
-            rect2.inflate_ip(-15, -15)
+            rect2.inflate_ip(-1, -1)
             val = board.getAt(p)
             if(val == 0):
                 screen.fill(self.colors["btn_empty"], rect2)

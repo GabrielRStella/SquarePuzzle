@@ -17,10 +17,7 @@ class Board:
         r = Random()
         p = self.findEmpty()
         while self.getError() < error:
-            print(self.adj(p))
             p2 = random.choice(self.adj(p))
-            print(p)
-            print(p2)
             self.swap(p, p2)
             p = p2
 
