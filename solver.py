@@ -1,5 +1,6 @@
 import board, copy, queue
 
+Board = board.Board
 Queue = queue.Queue
 
 class Solver:
@@ -31,27 +32,32 @@ class Solver:
         #basically exponentially search for best solution up to a set depth
         #TODO: maybe do it better but probs not huehuehue
         pq = queue.PriorityQueue()
-        #entry format: error, board, current position, list of moves
-        pq.put((board.getError(), PathGroup(board, board.findEmpty(), [])))
+        startBoard = board
+        destBoard = Board(board.width, board.height)
+        #entry format: error, current position, list of moves
+        pq.put((destBoard.getTotalError(startBoard), PathGroup(startBoard.findEmpty(), [])))
         while not pq.empty():
             entry = pq.get()
             group = entry[1]
-            print(group.move)
-            if(len(group.moves) >= depth):
+            if len(group.moves) >= depth:
                 for x in group.moves:
                     q.put(x)
                 return
-            for p in group.board.adj(group.move):
-                board2 = group.board.clone()
-                board2.swap(group.move, p)
+            board2 = startBoard.clone()
+            prev = group.move
+            for move2 in group.moves:
+                board2.swap(prev, move2)
+                prev = move2
+            for p in board2.adj(group.move):
+                board3 = board2.clone()
+                board3.swap(group.move, p)
                 moves = copy.copy(group.moves)
                 moves.append(p)
-                pq.put((board2.getError(), PathGroup(board2, p, moves)))
+                pq.put((destBoard.getTotalError(board3), PathGroup(p, moves)))
 
 class PathGroup:
 
-    def __init__(self, board, move, moves):
-        self.board = board
+    def __init__(self, move, moves):
         self.move = move
         self.moves = moves
 
@@ -72,4 +78,7 @@ class PathGroup:
     
     def __ge__(self, other):
         return True
+
+    def __repr__(self):
+        return "(" + str(self.move) + ", " + str(self.moves) + ")"
     
