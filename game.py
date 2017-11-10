@@ -14,16 +14,18 @@ class Game:
                   "text": [0, 0, 0]}
         #add menu
         self.gui = gui.Gui(self.getMenuBounds(screen))
-        self.gui.addText("Menu:", True)
-        self.txt_width = self.gui.addText("Width: " + str(self.width), True)
+        self.gui.addText("Menu:")
+        self.txt_width = self.gui.addText("Width: " + str(self.width))
         self.gui.addButton("-", self.cb_decr_width)
         self.gui.addButton("+", self.cb_incr_width)
-        self.txt_height = self.gui.addText("Height: " + str(self.height), True)
+        self.txt_height = self.gui.addText("Height: " + str(self.height))
         self.gui.addButton("-", self.cb_decr_height)
         self.gui.addButton("+", self.cb_incr_height)
-        self.gui.addText("=========", True)
+        self.gui.addText("=========")
         self.gui.addButton("Set", self.cb_set)
         self.gui.addButton("Shuffle", self.cb_shuffle)
+        self.gui.addText("=========")
+        self.gui.addText("Solver")
 
     def cb_decr_width(self, screen, mouse):
         if self.width > 1:
@@ -50,6 +52,7 @@ class Game:
         self.shuffle()
 
     def shuffle(self):
+        self.board = Board(self.width, self.height)
         self.board.shuffle(self.width * self.height * min(self.width, self.height))
 
     def getMenuBounds(self, screen):

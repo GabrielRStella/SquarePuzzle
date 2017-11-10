@@ -35,7 +35,7 @@ class Gui:
         self.elements.append(btn)
         return btn
 
-    def addText(self, label, centered = False):
+    def addText(self, label, centered = True):
         txt = Text(self.getElementBounds(), label, centered)
         self.elements.append(txt)
         return txt
@@ -86,7 +86,7 @@ class Button(GuiElement):
         screen.blit(font.render(self.label, True, (0, 0, 0)), centerText(font.size(self.label), self.bounds))
 
 class Text(GuiElement):
-    def __init__(self, bounds, label, centered = False):
+    def __init__(self, bounds, label, centered = True):
         super().__init__(bounds)
         self.centered = centered
         self.label = label
