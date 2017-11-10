@@ -1,4 +1,4 @@
-import point, random
+import copy, point, random
 
 Point = point.Point
 Random = random.Random
@@ -11,6 +11,9 @@ class Board:
         self.size = w * h
         self.board = list(range(w * h))
         #list(map(lambda x: list(range(x * h, (x + 1) * h)), [y for y in range(w)]))
+
+    def clone(self):
+        return copy.deepcopy(self)
 
     def shuffle(self, error):
         board = self.board
