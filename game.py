@@ -1,13 +1,15 @@
-import board, gui, point, pygame
+import board, gui, point, pygame, solver
 
 Point = point.Point
 Board = board.Board
+Solver = solver.Solver
 
 class Game:
     def __init__(self, screen):
         self.width = 4
         self.height = 4
-        self.board = Board(self.width, self.height)
+        self.solver_depth = 20
+        self.setBoard(self.width, self.height)
         self.colors = {"bg": [0, 0, 0],
                   "btn": [255, 255, 255],
                   "btn_empty": [160, 160, 160],
@@ -26,6 +28,11 @@ class Game:
         self.gui.addButton("Shuffle", self.cb_shuffle)
         self.gui.addText("=========")
         self.gui.addText("Solver")
+        self.gui.addButton("Step", self.cb_solver_next)
+        self.gui.addButton("Reset", self.cb_solver_reset)
+        self.txt_solver_depth = self.gui.addText("Depth: " + str(self.solver_depth))
+        self.gui.addButton("-", self.cb_solver_decr_depth)
+        self.gui.addButton("+", self.cb_solver_incr_depth)
 
     def cb_decr_width(self, screen, mouse):
         if self.width > 1:
@@ -46,15 +53,36 @@ class Game:
         self.txt_height.label = "Height: " + str(self.height)
 
     def cb_set(self, screen, mouse):
-        self.board = Board(self.width, self.height)
+        self.setBoard(self.width, self.height)
 
     def cb_shuffle(self, screen, mouse):
+        self.setBoard(self.width, self.height)
         self.shuffle()
+        
+    def cb_solver_next(self, screen, mouse):
+        self.doMove(self.solver.move())
+        
+    def cb_solver_reset(self, screen, mouse):
+        self.solver.reset()
+
+    def cb_solver_decr_depth(self, screen, mouse):
+        if self.solver_depth > 1:
+            self.solver_depth = self.solver_depth - 1
+        self.txt_solver_depth.label = "Depth: " + str(self.solver_depth)
+        self.solver = Solver(self.board, self.solver_depth)
+
+    def cb_solver_incr_depth(self, screen, mouse):
+        self.solver_depth = self.solver_depth + 1
+        self.txt_solver_depth.label = "Depth: " + str(self.solver_depth)
+        self.solver = Solver(self.board, self.solver_depth)
 
     def shuffle(self):
-        self.board = Board(self.width, self.height)
         self.board.shuffle(self.width * self.height * min(self.width, self.height))
 
+    def setBoard(self, w, h):
+        self.board = Board(w, h)
+        self.solver = Solver(self.board, self.solver_depth)
+        
     def getMenuBounds(self, screen):
         rect = screen.get_rect()
         width = min(rect.width / 3, 200)
@@ -115,15 +143,21 @@ class Game:
     def mouseButtonDown(self, screen, event):
         p = Point(event.pos[0], event.pos[1])
         p = self.getBoardPoint(screen, p)
-        #print(p)
-        if(not (p is None)):
-            board = self.board
-            p2 = board.findEmpty()
-            if(p in board.adj(p2)):
-                board.swap(p, p2)
+        if(self.doMove(p)):
+            self.solver.reset()
         self.gui.onClick(screen, event.pos)
 
     def mouseButtonUp(self, screen, event):
         #p = Point(event.pos[0], event.pos[1])
         #p = self.getBoardIndex(screen, p)
         pass
+
+    def doMove(self, p):
+        if(not (p is None)):
+            board = self.board
+            p2 = board.findEmpty()
+            if(p in board.adj(p2)):
+                board.swap(p, p2)
+                return True
+        return False
+        
