@@ -11,6 +11,9 @@ class Game:
         self.solver_depth = 10
         self.txt_board_error = None
         self.img = img
+        self.scaled_img = img
+        self.img_width = 0
+        self.img_height = 0
         self.setBoard(self.width, self.height)
         self.colors = {"bg": [0, 0, 0],
                   "btn": [255, 255, 255],
@@ -95,7 +98,7 @@ class Game:
         
     def getMenuBounds(self, screen):
         rect = screen.get_rect()
-        width = min(rect.width / 3, 200)
+        width = 200 #min(rect.width / 3, 200)
         height = rect.height
         return pygame.Rect(0, 0, int(width), height)
 
@@ -118,7 +121,14 @@ class Game:
         sizex = rect.width / board.width
         sizey = rect.height / board.height
         font = pygame.font.Font(pygame.font.get_default_font(), int(min(sizex, sizey) / 2))
-        img = self.img
+        img = self.scaled_img
+        img_bounds = self.getBoardBounds(screen)
+        if (img_bounds.width != self.img_width) or (img_bounds.height != self.img_height):
+            self.img_width = img_bounds.width
+            self.img_height = img_bounds.height
+            img = pygame.transform.scale(self.img, (img_bounds.width, img_bounds.height))
+            self.scaled_img = img
+        
         for i in range(board.size):
             p = board.pointOf(i)
             x = p.x
@@ -137,6 +147,8 @@ class Game:
             
             if(val == 0):
                 screen.fill(self.colors["btn_empty"], rect2)
+
+            #draws labels over each tile so you know where they go
             #txt = str(board.getAt(p))
             #rect2 = gui.centerText(font.size(txt), rect2)
             #screen.blit(font.render(txt, True, self.colors["text"]), rect2)

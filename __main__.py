@@ -13,8 +13,7 @@ game = game.Game(screen, img)
 game.shuffle()
 
 #TODO:
-#-fix images
-#-AI solver
+#-improve solver
 
 while 1:
     for event in pygame.event.get():
