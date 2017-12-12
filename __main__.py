@@ -7,7 +7,7 @@ bg = 0, 0, 0
 screen = pygame.display.set_mode(size, pygame.RESIZABLE)
 pygame.display.set_caption("Square Puzzle")
 #TODO: set window icon
-img = pygame.image.load("img.png")
+img = pygame.image.load("images/img.png")
 
 game = game.Game(screen, img)
 game.shuffle()

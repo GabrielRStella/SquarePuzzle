@@ -1,5 +1,11 @@
 import board, gui, point, pygame, solver
 
+#https://stackoverflow.com/questions/37497815/file-opening-dialog-drag-and-drop-in-pygame/37574564#37574564
+from tkinter.filedialog import askopenfilename
+from tkinter import *
+#https://stackoverflow.com/questions/5137497/find-current-directory-and-files-directory/5137509#5137509
+import os
+
 Point = point.Point
 Board = board.Board
 Solver = solver.Solver
@@ -40,6 +46,7 @@ class Game:
         self.gui.addButton("+", self.cb_solver_incr_depth)
         self.txt_board_error = self.gui.addText("Error: 0")
         self.updateError()
+        self.gui.addButton("Load Image", self.cb_load_image)
         
     def cb_decr_width(self, screen, mouse):
         if self.width > 1:
@@ -82,6 +89,18 @@ class Game:
         self.solver_depth = self.solver_depth + 1
         self.txt_solver_depth.label = "Depth: " + str(self.solver_depth)
         self.solver = Solver(self.board, self.solver_depth)
+
+    def cb_load_image(self, screen, mouse):
+        try:
+            root = Tk()
+            filename = askopenfilename(initialdir=os.getcwd())
+            root.destroy()
+            self.img = pygame.image.load(filename)
+            self.scaled_img = self.img
+            self.img_width = 0
+            self.img_height = 0
+        except:
+            pass
 
     def updateError(self):
         if(self.txt_board_error is not None):
