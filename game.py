@@ -8,7 +8,8 @@ class Game:
     def __init__(self, screen):
         self.width = 4
         self.height = 4
-        self.solver_depth = 20
+        self.solver_depth = 10
+        self.txt_board_error = None
         self.setBoard(self.width, self.height)
         self.colors = {"bg": [0, 0, 0],
                   "btn": [255, 255, 255],
@@ -33,7 +34,9 @@ class Game:
         self.txt_solver_depth = self.gui.addText("Depth: " + str(self.solver_depth))
         self.gui.addButton("-", self.cb_solver_decr_depth)
         self.gui.addButton("+", self.cb_solver_incr_depth)
-
+        self.txt_board_error = self.gui.addText("Error: 0")
+        self.updateError()
+        
     def cb_decr_width(self, screen, mouse):
         if self.width > 1:
             self.width = self.width - 1
@@ -76,12 +79,18 @@ class Game:
         self.txt_solver_depth.label = "Depth: " + str(self.solver_depth)
         self.solver = Solver(self.board, self.solver_depth)
 
+    def updateError(self):
+        if(self.txt_board_error is not None):
+            self.txt_board_error.label = "Error: " + str(self.board.getError())
+
     def shuffle(self):
-        self.board.shuffle(self.width * self.height * min(self.width, self.height))
+        self.board.shuffle(self.width * self.height)
+        self.updateError()
 
     def setBoard(self, w, h):
         self.board = Board(w, h)
         self.solver = Solver(self.board, self.solver_depth)
+        self.updateError()
         
     def getMenuBounds(self, screen):
         rect = screen.get_rect()
@@ -158,6 +167,7 @@ class Game:
             p2 = board.findEmpty()
             if(p in board.adj(p2)):
                 board.swap(p, p2)
+                self.updateError()
                 return True
         return False
         

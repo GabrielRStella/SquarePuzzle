@@ -11,6 +11,12 @@ class Point:
         ret.append(Point(self.x, self.y - 1))
         return ret
 
+    def dist(self, other):
+        return abs(self.x - other.x) + abs(self.y - other.y)
+
+    def length(self):
+        return abs(self.x) + abs(self.y)
+
     def __str__(self):
         return "(" + str(self.x) + ", " + str(self.y) + ")"
 
@@ -38,4 +44,7 @@ class Point:
     
     def __ge__(self, other):
         return other < self
+
+    def __sub__(self, other):
+        return abs(self.x - other.x) + abs(self.y - other.y)
     

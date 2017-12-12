@@ -5,12 +5,13 @@ size = width, height = 800, 600
 bg = 0, 0, 0
 
 screen = pygame.display.set_mode(size, pygame.RESIZABLE)
+pygame.display.set_caption("Square Puzzle")
+#TODO: set window icon
 
 game = game.Game(screen)
 game.shuffle()
 
 #TODO:
-#-menu
 #-have images instead of numbers
 #-AI solver
 

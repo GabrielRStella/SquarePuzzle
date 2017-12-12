@@ -29,18 +29,7 @@ class Board:
         error = 0
         for i in range(self.size):
             j = board[i]
-            dist = abs(i - j)
-            error = error + dist
-        return error
-
-    def getTotalError(self, other):
-        board1 = self.board
-        board2 = other.board
-        error = 0
-        for i in range(self.size):
-            j = board1[i]
-            k = board2[i]
-            dist = abs(j - k)
+            dist = self.pointOf(i) - self.pointOf(j)
             error = error + dist
         return error
 

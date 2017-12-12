@@ -18,42 +18,47 @@ class Solver:
 
     #returns the next move in the queue
     def move(self):
-        q = self.q
-        if q.empty():
+        if self.q.empty():
             #pass fields as args for convenience
-            self.generate(q, self.board, self.depth)
+            self.q = self.generate(self.board, self.depth)
         #just in case...
-        if q.empty():
+        if self.q.empty():
             return None
-        return q.get()
+        return self.q.get()
 
-    def generate(self, q, board, depth):
+    def generate(self, board, depth):
         #put crap into queue
         #basically exponentially search for best solution up to a set depth
         #TODO: maybe do it better but probs not huehuehue
-        pq = queue.PriorityQueue()
+        pq = queue.PriorityQueue() # Queue()
         startBoard = board
-        destBoard = Board(board.width, board.height)
+        firstError = startBoard.getError()
         #entry format: error, current position, list of moves
-        pq.put((destBoard.getTotalError(startBoard), PathGroup(startBoard.findEmpty(), [])))
+        pq.put((startBoard.getError(), PathGroup(startBoard.findEmpty(), [])))
+        q = Queue()
         while not pq.empty():
             entry = pq.get()
             group = entry[1]
-            if len(group.moves) >= depth:
+            
+            if(entry[0] < firstError):
+                q = Queue()
                 for x in group.moves:
                     q.put(x)
-                return
+                if (len(group.moves) >= depth):
+                    break
+            
             board2 = startBoard.clone()
             prev = group.move
             for move2 in group.moves:
                 board2.swap(prev, move2)
                 prev = move2
-            for p in board2.adj(group.move):
-                board3 = board2.clone()
-                board3.swap(group.move, p)
+            for p in [x for x in board2.adj(group.move) if (x not in group.moves)]:
+                board2.swap(group.move, p) #for calculating error
                 moves = copy.copy(group.moves)
                 moves.append(p)
-                pq.put((destBoard.getTotalError(board3), PathGroup(p, moves)))
+                pq.put((board2.getError(), PathGroup(p, moves)))
+                board2.swap(group.move, p) #undo previous swap
+        return q
 
 class PathGroup:
 
