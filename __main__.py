@@ -7,12 +7,13 @@ bg = 0, 0, 0
 screen = pygame.display.set_mode(size, pygame.RESIZABLE)
 pygame.display.set_caption("Square Puzzle")
 #TODO: set window icon
+img = pygame.image.load("img.png")
 
-game = game.Game(screen)
+game = game.Game(screen, img)
 game.shuffle()
 
 #TODO:
-#-have images instead of numbers
+#-fix images
 #-AI solver
 
 while 1:

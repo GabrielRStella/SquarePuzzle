@@ -5,11 +5,12 @@ Board = board.Board
 Solver = solver.Solver
 
 class Game:
-    def __init__(self, screen):
+    def __init__(self, screen, img):
         self.width = 4
         self.height = 4
         self.solver_depth = 10
         self.txt_board_error = None
+        self.img = img
         self.setBoard(self.width, self.height)
         self.colors = {"bg": [0, 0, 0],
                   "btn": [255, 255, 255],
@@ -117,6 +118,7 @@ class Game:
         sizex = rect.width / board.width
         sizey = rect.height / board.height
         font = pygame.font.Font(pygame.font.get_default_font(), int(min(sizex, sizey) / 2))
+        img = self.img
         for i in range(board.size):
             p = board.pointOf(i)
             x = p.x
@@ -125,13 +127,19 @@ class Game:
             rect2.move_ip(rect.x, rect.y)
             rect2.inflate_ip(-2, -2)
             val = board.getAt(p)
+
+            p2 = board.pointOf(board.getAt(board.pointOf(i)))
+            x = p2.x
+            y = p2.y
+            rect3 = pygame.Rect(sizex * x, sizey * y, sizex, sizey)
+            rect3.inflate_ip(-2, -2)
+            screen.blit(img, rect2.topleft, rect3)
+            
             if(val == 0):
                 screen.fill(self.colors["btn_empty"], rect2)
-            else:
-                screen.fill(self.colors["btn"], rect2)
-            txt = str(board.getAt(p))
-            rect2 = gui.centerText(font.size(txt), rect2)
-            screen.blit(font.render(txt, True, self.colors["text"]), rect2)
+            #txt = str(board.getAt(p))
+            #rect2 = gui.centerText(font.size(txt), rect2)
+            #screen.blit(font.render(txt, True, self.colors["text"]), rect2)
 
     def drawMenu(self, screen, rect):
         font = pygame.font.Font(pygame.font.get_default_font(), self.gui.height() - 2)
