@@ -34,7 +34,7 @@ class Solver:
         startBoard = board
         firstError = startBoard.getError()
         #entry format: error, current position, list of moves
-        pq.put((startBoard.getError(), PathGroup(startBoard.findEmpty(), [])))
+        pq.put((firstError, PathGroup(startBoard.findEmpty(), [])))
         q = Queue()
         while not pq.empty():
             entry = pq.get()
@@ -44,7 +44,7 @@ class Solver:
                 q = Queue()
                 for x in group.moves:
                     q.put(x)
-                if (len(group.moves) >= depth):
+                if (len(group.moves) >= depth or entry[0] == 0):
                     break
             
             board2 = startBoard.clone()
